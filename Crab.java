@@ -53,34 +53,48 @@ public class Crab extends Actor
     }
     
     public void move() {
+        int remainderX = getX()%32-16;
+        int remainderY = getY()%32-16;
         if (Greenfoot.isKeyDown("up")) {
             turn(angle-90);
             angle = 90;
             move(speed);
+            if (Math.abs(remainderX) < 10) {
+                setLocation(getX()-remainderX, getY());
+            }
             if (isTouching(Lobster.class) && bombTouching == false) {
                 move(-speed);
             }
         }    
-        if (Greenfoot.isKeyDown("down")) {
+        else if (Greenfoot.isKeyDown("down")) {
             turn(angle-270);
             angle = 270;
             move(speed);
+            if (Math.abs(remainderX) < 10) {
+                setLocation(getX()-remainderX, getY());
+            }
             if (isTouching(Lobster.class) && bombTouching == false) {
                 move(-speed);
             }
         }   
-        if (Greenfoot.isKeyDown("right")) {
+        else if (Greenfoot.isKeyDown("right")) {
             turn(angle);
             angle = 0;
             move(speed);
+            if (Math.abs(remainderY) < 10) {
+                setLocation(getX(), getY()-remainderY);
+            }
             if (isTouching(Lobster.class) && bombTouching == false) {
                 move(-speed);
             }
         } 
-        if (Greenfoot.isKeyDown("left")) {
+        else if (Greenfoot.isKeyDown("left")) {
             turn(angle-180);
             angle = 180;
             move(speed);
+            if (Math.abs(remainderY) < 10) {
+                setLocation(getX(), getY()-remainderY);
+            }
             if (isTouching(Lobster.class) && bombTouching == false) {
                 move(-speed);
             }
@@ -90,8 +104,8 @@ public class Crab extends Actor
     public void tightFit() {
         int remainderX = getX()%32-16;
         int remainderY = getY()%32-16;
-        if(Math.abs(remainderY) < 5 && Greenfoot.isKeyDown("left")) {
-            
+        if(Math.abs(remainderX) < 10 && Greenfoot.isKeyDown("up") || Math.abs(remainderX) < 10 && Greenfoot.isKeyDown("down")) {
+            setLocation(getX()-remainderX, getY());
         } 
     }
     //992, 416
