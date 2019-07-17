@@ -1,4 +1,5 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo
+import java.util.List;
         
 /**
  * Write a description of class Fire here.
@@ -8,156 +9,108 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Fire extends Actor
 {
-    public int fireRadius = 1;
-    private int fireRadiusU = fireRadius;
-    private int fireRadiusL = fireRadius;
-    private int fireRadiusR = fireRadius;
-    private int fireRadiusD = fireRadius;
-    private int frame = 0; // Purpose of frames is mainly for the animation (if I can figure that one out later)
-    private int firePosX;
-    private int firePosY;
-    private int intersectX;
-    private int intersectY;
-    private boolean stopLoopU = false;
-    private boolean stopLoopL = false;
-    private boolean stopLoopR = false;
-    private boolean stopLoopD = false;
-    private boolean fireEndU = true;
-    private boolean fireEndL = true;
-    private boolean fireEndR = true;
-    private boolean fireEndD = true;
-    
+    private int currentImg; // Used to refer to the index of the initial fire image.
+    private int frame = 0; // Frames determine animation speed and when certain modules execute.
+    public static GreenfootImage[] images = { // Static array of all images, used in fire animation and to set initial images in Bomb class.
+                                        new GreenfootImage("fire1a.png"),
+                                        new GreenfootImage("fire2a.png"),
+                                        new GreenfootImage("fire3a.png"),
+                                        new GreenfootImage("fire4a.png"),
+                                        new GreenfootImage("fire1bh.png"),
+                                        new GreenfootImage("fire2bh.png"),
+                                        new GreenfootImage("fire3bh.png"),
+                                        new GreenfootImage("fire4bh.png"),
+                                        new GreenfootImage("fire1bv.png"),
+                                        new GreenfootImage("fire2bv.png"),
+                                        new GreenfootImage("fire3bv.png"),
+                                        new GreenfootImage("fire4bv.png"),
+                                        new GreenfootImage("fire1cu.png"),
+                                        new GreenfootImage("fire2cu.png"),
+                                        new GreenfootImage("fire3cu.png"),
+                                        new GreenfootImage("fire4cu.png"),
+                                        new GreenfootImage("fire1cd.png"),
+                                        new GreenfootImage("fire2cd.png"),
+                                        new GreenfootImage("fire3cd.png"),
+                                        new GreenfootImage("fire4cd.png"),
+                                        new GreenfootImage("fire1cr.png"),
+                                        new GreenfootImage("fire2cr.png"),
+                                        new GreenfootImage("fire3cr.png"),
+                                        new GreenfootImage("fire4cr.png"),
+                                        new GreenfootImage("fire1cl.png"),
+                                        new GreenfootImage("fire2cl.png"),
+                                        new GreenfootImage("fire3cl.png"),
+                                        new GreenfootImage("fire4cl.png"),
+                                    };
+                                    
     /**
      * Act - do whatever the Fire wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     public void act() 
     {
-        //explode();
-        //lmao();
-        pls();
-        // Greenfoot.stop();
-    }
-    
-    public void pls()
-    {
-        Fire fireBL = new Fire();
-        Fire fireBR = new Fire();
-        Fire fireBU = new Fire();
-        Fire fireBD = new Fire();
-        Fire fireCL = new Fire();
-        Fire fireCR = new Fire();
-        Fire fireCU = new Fire();
-        Fire fireCD = new Fire();
-        fireBL.setImage("fire1bh.png");
-        fireBR.setImage("fire1bh.png");
-        fireBU.setImage("fire1bv.png");
-        fireBD.setImage("fire1bv.png");
-        fireCL.setImage("fire1cl.png");
-        fireCR.setImage("fire1cr.png");
-        fireCU.setImage("fire1cu.png");
-        fireCD.setImage("fire1cd.png");
-        if(frame == 2){
-            for(int count = 1; count <= fireRadius; count++){
-                if(stopLoopD == false){
-                    getWorld().addObject(fireBD, getX(), getY() + (32 * count));
-                }
-                if(stopLoopU == false){
-                    getWorld().addObject(fireBU, getX(), getY() - (32 * count));
-                }
-                if(stopLoopR == false){
-                    getWorld().addObject(fireBR, getX() + (32 * count), getY());
-                }
-                if(stopLoopL == false){
-                    getWorld().addObject(fireBL, getX() - (32 * count), getY());
-                }
-            }
-            getWorld().addObject(fireCD, getX(), getY() + ((32 * fireRadius) + 32));
-            getWorld().addObject(fireCU, getX(), getY() - ((32 * fireRadius) + 32));
-            getWorld().addObject(fireCR, getX() + ((32 * fireRadius) + 32), getY());
-            getWorld().addObject(fireCL, getX() - ((32 * fireRadius) + 32), getY());
-        }
-        frame++;
-    }
-    
-    public void explode() // A variant of pls(), also has the same problem + isTouching(Brick.class) method doesn't work for some reason
-    {
-        if(frame == 0){
-            firePosX = getX();
-            firePosY = getY();
-            while(fireRadiusD <= fireRadius && stopLoopD == false){
-                System.out.println(fireRadiusD);
-                Fire fireBD = new Fire();
-                fireBD.setImage("fire1bv.png");
-                getWorld().addObject(fireBD, firePosX, firePosY + (32 * fireRadiusD));
-                if(isTouching(Brick.class)){
-                    removeTouching(Brick.class);
-                    getWorld().removeObject(fireBD);
-                    stopLoopD = true;
-                    fireRadiusD = fireRadius + 1;
-                    System.out.println(fireRadiusD);
-                }
-                fireRadiusD++;
-                System.out.println(fireRadiusD);
-            }
-            for(int count = 1; count <= fireRadius; count++){
-                Fire fireBU = new Fire();
-                fireBU.setImage("fire1bv.png");
-                getWorld().addObject(fireBU, firePosX, firePosY - (32 * count));
-                // if(isTouching(Brick.class)){
-                    // getWorld().removeObject(this);
-                    // stopLoopU = true;
-                    // count = fireRadius + 1;
-                // }
-            }
-            for(int count = 1; count <= fireRadius; count++){
-                Fire fireBR = new Fire();
-                fireBR.setImage("fire1bh.png");
-                getWorld().addObject(fireBR, firePosX + (32 * count), firePosY);
-                // if(isTouching(Brick.class)){
-                    // getWorld().removeObject(this);
-                    // stopLoopR = true;
-                    // count = fireRadius + 1;
-                // }
-            }
-            for(int count = 1; count <= fireRadius; count++){
-                Fire fireBL = new Fire();
-                fireBL.setImage("fire1bh.png");
-                getWorld().addObject(fireBL, firePosX - (32 * count), firePosY);
-                // if(isTouching(Brick.class)){
-                    // getWorld().removeObject(this);
-                    // stopLoopL = true;
-                    // count = fireRadius + 1;
-                // }
-            }
-            if(stopLoopD == false){
-                Fire fireCD = new Fire();
-                fireCD.setImage("fire1cd.png");
-                getWorld().addObject(fireCD, firePosX, firePosY + ((32 * fireRadius) + 32));
-            }   
-            if(stopLoopU == false){
-                Fire fireCU = new Fire();
-                fireCU.setImage("fire1cu.png");
-                getWorld().addObject(fireCU, firePosX, firePosY - ((32 * fireRadius) + 32));
-            }
-            if(stopLoopR == false){
-                Fire fireCR = new Fire();
-                fireCR.setImage("fire1cr.png");
-                getWorld().addObject(fireCR, firePosX + ((32 * fireRadius) + 32), firePosY);
-            }
-            if(stopLoopL == false){
-                Fire fireCL = new Fire(); 
-                fireCL.setImage("fire1cl.png");
-                getWorld().addObject(fireCL, firePosX - ((32 * fireRadius) + 32), firePosY);
-            }
-        }
-        frame++;
+        fireEnd();
+        arraySearch();
+        animation();
     }
         
-    private void lmao(){ // Don't worry about this for now, it was used for testing purposes
+    /**
+     * Removes the end pieces of fire if it is overlapping with other bricks or bombs.
+     */
+    private void fireEnd()
+    {
         if(isTouching(Brick.class)){
             removeTouching(Brick.class);
             getWorld().removeObject(this);
         }
+        if (getWorld() != null){
+            for(Object obj : getIntersectingObjects(Bomb.class)){
+                if(obj instanceof Bomb && getImage() != images[0] && getImage() != images[1] && getImage() != images[2] && getImage() != images[3]){
+                    getWorld().removeObject(this);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Searches the 'images' array to find the current image's index (currentImg) to be used in 'animation' module.
+     */
+    private void arraySearch()
+    {
+        if(frame == 0){
+            for(int count = 0; count < 28; count++){
+                if(images[count] == getImage()){
+                    currentImg = count;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Animation of fire using the ordered 'images' array, and removes fire afterwards. 
+     */
+    private void animation()
+    {
+        if(frame == 4){
+            setImage(images[currentImg + 1]);
+        }
+        else if(frame == 8){
+            setImage(images[currentImg + 2]);
+        }
+        else if(frame == 12){
+            setImage(images[currentImg + 3]);
+        }
+        else if(frame == 16){
+            setImage(images[currentImg + 2]);
+        }
+        else if(frame == 20){
+            setImage(images[currentImg + 1]);
+        }
+        else if(frame == 24){
+            setImage(images[currentImg]);
+        }
+        else if(frame == 28){
+            getWorld().removeObject(this);
+        }
+        frame++;
     }
 }
