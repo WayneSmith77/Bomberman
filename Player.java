@@ -1,18 +1,21 @@
-
 import greenfoot.*;
 
+/**
+ * Write a description of class Player here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
 public class Player extends Actor
 {
     //Setting the amount of lives for the player.
     int lives = 3;
     //Setting the speed of the player.
-    int speed = 4;
+    int speed = 2;
     //Showing the player isn't touching a bomb which he has placed.
     boolean bombTouching = false;
     //Showing the player isn't touching any objects.
     boolean contact = false;
-    //Setting the amount of bombs which are yet to be placed.
-    int bombs = 1;
     //Setting the amount of bombs which can be placed at a time.
     int bombset = 1;
     //Inisialising the frame for animation purposes.
@@ -21,8 +24,8 @@ public class Player extends Actor
     int angle = 0;
     //Initialising the cooldown for placing another bomb.
     int cooldown = 0;
-    //Setting the range of the bomb.
-    int range = 1;
+    //Initialising the range of the bomb.
+    public static int range;
     
     //Setting downwards movement animation tiles.
     private GreenfootImage down1 = new GreenfootImage("tile004.png");
@@ -53,10 +56,18 @@ public class Player extends Actor
     private GreenfootImage dead6 = new GreenfootImage("tile033.png");
     private GreenfootImage dead7 = new GreenfootImage("tile034.png");
     
+    //Initialising sound effects.
+    private GreenfootSound deathSound = new GreenfootSound("death.wav");
+    private GreenfootSound bombSound = new GreenfootSound("bomb.wav");
+    private GreenfootSound horizontalMove = new GreenfootSound("horizontal.wav");
+    private GreenfootSound verticalMove = new GreenfootSound("vertical.wav");
+    private GreenfootSound powerSound = new GreenfootSound("power.wav");
     
     public Player() {
         //Setting the player's starting image.
         setImage(right1);
+        //Resetting range value.
+        range = 0;
     }    
     
     public void act()
@@ -147,27 +158,22 @@ public class Player extends Actor
             //Checking whether a bomb has already been placed here.
             if(getOneObjectAtOffset(0, 0, Bomb.class) == null) {
                 //If the player is currently alive.
-                if (frame > 0) {
+                if(frame > 0) {
                     //Checking whether enough time has passed since the last bomb was placed.
-                    if(cooldown == 0) {
+                    if(cooldown == 0 && getWorld().getObjects(Bomb.class).size() < bombset) {
                         //Checking how far the player is from the centre of the grid square.
                         int remainderX = getX()%32-16;
                         int remainderY = getY()%32-16;
                         //Placing the bomb in the centre of the grid square.
-                        getWorld().addObject(new Bomb(range), getX()-remainderX, getY()-remainderY);    
+                        getWorld().addObject(new Bomb(), getX()-remainderX, getY()-remainderY);
+                        //Playing sound for bomb placement.
+                        bombSound.play();
                         //Storing that the player is touching a bomb (and still needs to move)
                         bombTouching = true;
-                        //Removing the amount of bombs yet to be placed before cooldown starts.
-                        bombs -= 1;
-                        //Checking whether all bombs available have been placed.
-                        if (bombs == 0) {
-                            //Resetting the amount of bombs able to be placed in the time span.
-                            bombs = bombset;
-                            //Setting the cooldown period.
-                            cooldown = 180;
-                        }
-                    }    
-                }    
+                        //Setting the cooldown period.
+                        cooldown = 15;
+                    }
+                }
             }
         }    
     }
@@ -200,16 +206,16 @@ public class Player extends Actor
             //Checking whether the player is moving up.
             if (Greenfoot.isKeyDown("up")) {
                 //Checking which stage of the movement animation to set.
-                if (frame <= 10) {
+                if (frame <= 5) {
                     setImage(up1);
                 }
-                else if (frame <= 20) {
+                else if (frame <= 10) {
                     setImage(up2);
                 } 
-                else if (frame <= 30) {
+                else if (frame <= 15) {
                     setImage(up1);
                 } 
-                else if (frame <= 40) {
+                else if (frame <= 20) {
                     setImage(up3);
                 } 
                 //Increasing the frame while movement is in process.
@@ -217,54 +223,54 @@ public class Player extends Actor
             }  
             //Repeating this process for downwards movement.
             else if (Greenfoot.isKeyDown("down")) {
-                if (frame <= 10) {
+                if (frame <= 5) {
                     setImage(down1);
                 }
-                else if (frame <= 20) {
+                else if (frame <= 10) {
                     setImage(down2);
                 } 
-                else if (frame <= 30) {
+                else if (frame <= 15) {
                     setImage(down1);
                 } 
-                else if (frame <= 40) {
+                else if (frame <= 20) {
                     setImage(down3);
                 } 
                 frame += 1;
             }  
             //Repeating this process for rightwards movement.
             else if (Greenfoot.isKeyDown("right")) {
-                if (frame <= 10) {
+                if (frame <= 5) {
                     setImage(right1);
                 }
-                else if (frame <= 20) {
+                else if (frame <= 10) {
                     setImage(right2);
                 } 
-                else if (frame <= 30) {
+                else if (frame <= 15) {
                     setImage(right1);
                 } 
-                else if (frame <= 40) {
+                else if (frame <= 20) {
                     setImage(right3);
                 } 
                 frame += 1;
             } 
             //Repeating this process for leftwards movement.
             else if (Greenfoot.isKeyDown("left")) {
-                if (frame <= 10) {
+                if (frame <= 5) {
                     setImage(left1);
                 }
-                else if (frame <= 20) {
+                else if (frame <= 10) {
                     setImage(left2);
                 } 
-                else if (frame <= 30) {
+                else if (frame <= 15) {
                     setImage(left1);
                 } 
-                else if (frame <= 40) {
+                else if (frame <= 20) {
                     setImage(left3);
                 } 
                 frame += 1;
             } 
             //Checking whether the animation sequence has reached its end.
-            if (frame == 40) {
+            if (frame == 20) {
                 //Resetting the animation sequence.
                 frame = 1;
             }    
@@ -274,17 +280,18 @@ public class Player extends Actor
     public void powerUp() {
         //Checking whether the player is in contact with a power-up.
         if (isTouching(Powerup.class)) {
+            //Playing powerup sound.
+            powerSound.play();
             //Storing the contacted power-up as an object.
             Powerup powerup = (Powerup) getOneIntersectingObject(Powerup.class);
             //Getting the attribute of the power-up.
             if (powerup.returnAttribute() == true) {
                 //Increasing the amount of bombs able to be placed.
                 bombset += 1;
-                bombs += 1;
             }    
-            else {
+            else if (powerup.returnAttribute() == false) {
                 //Increasing the range of bombs placed.
-                range += 2;
+                range += 1;
             }
         }    
     }    
@@ -295,40 +302,39 @@ public class Player extends Actor
             //Checking whether the player is alive.
             if (frame > 0) {
                 //Removing a life.
-                lives -=1; 
+                lives -=1;
+                //Playing death sound.
+                deathSound.play();
+                //Updating life counter.
+                getWorld().showText("Lives: " + lives, 60, 436);
                 //Setting in process the death animation sequence.
-                frame = -22;
+                frame = -70;
                 //Resetting the player orientation.
                 turn(angle);
                 angle = 0;
             }    
-        }  
-        //Checking whether the player has lost all their lives.
-        if (lives == 0) {
-            //Ending the game.
-            Greenfoot.stop();
         }
         //Checking whether the death sequence is in process.
         if (frame <= 0) {
             //Progressing the death sequence.
             frame += 1;
             //Displaying images depending on how far through the death animation is.
-            if (frame <= -19) {
+            if (frame <= -60) {
                 setImage(dead1);
             }
-            else if (frame <= -16) {
+            else if (frame <= -50) {
                 setImage(dead2);
             }
-            else if (frame <= -13) {
+            else if (frame <= -40) {
                 setImage(dead3);
             }    
-            else if (frame <= -10) {
+            else if (frame <= -30) {
                 setImage(dead4);
             }
-            else if (frame <= -7) {
+            else if (frame <= -20) {
                 setImage(dead5);
             }
-            else if (frame <= -4) {
+            else if (frame <= -10) {
                 setImage(dead6);
             }    
             else if (frame < 1) {
@@ -341,7 +347,13 @@ public class Player extends Actor
                 setImage(right1);
             }    
         }    
+        //Checking whether the player has lost all their lives.
+        if (lives == 0 && frame > 0) {
+            //Dispalying Game Over.
+            getWorld().showText("Game Over!", 496, 436);
+            //Ending the game.
+            Greenfoot.stop();
+        }
     }
 }    
-
     

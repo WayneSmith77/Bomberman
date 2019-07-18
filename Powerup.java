@@ -8,19 +8,21 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Powerup extends Actor
 {
-    boolean effect;
+    private boolean effect;
+
+    public Powerup(boolean type) {
+        effect = type;
+    }
+    
     /**
      * Act - do whatever the Powerup wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    
-    public Powerup(boolean type) {
-        type = effect;
-    }
-    
     public void act() 
     {
-        // Add your action code here.
+        if(isTouching(Player.class)){
+            getWorld().removeObject(this);
+        }
     }    
     
     public boolean returnAttribute() {
