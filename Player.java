@@ -146,24 +146,27 @@ public class Player extends Actor
         if (Greenfoot.isKeyDown("space")) {
             //Checking whether a bomb has already been placed here.
             if(getOneObjectAtOffset(0, 0, Bomb.class) == null) {
-                //Checking whether enough time has passed since the last bomb was placed.
-                if(cooldown == 0) {
-                    //Checking how far the player is from the centre of the grid square.
-                    int remainderX = getX()%32-16;
-                    int remainderY = getY()%32-16;
-                    //Placing the bomb in the centre of the grid square.
-                    getWorld().addObject(new Bomb(range), getX()-remainderX, getY()-remainderY);    
-                    //Storing that the player is touching a bomb (and still needs to move)
-                    bombTouching = true;
-                    //Removing the amount of bombs yet to be placed before cooldown starts.
-                    bombs -= 1;
-                    //Checking whether all bombs available have been placed.
-                    if (bombs == 0) {
-                        //Resetting the amount of bombs able to be placed in the time span.
-                        bombs = bombset;
-                        //Setting the cooldown period.
-                        cooldown = 180;
-                    }
+                //If the player is currently alive.
+                if (frame > 0) {
+                    //Checking whether enough time has passed since the last bomb was placed.
+                    if(cooldown == 0) {
+                        //Checking how far the player is from the centre of the grid square.
+                        int remainderX = getX()%32-16;
+                        int remainderY = getY()%32-16;
+                        //Placing the bomb in the centre of the grid square.
+                        getWorld().addObject(new Bomb(range), getX()-remainderX, getY()-remainderY);    
+                        //Storing that the player is touching a bomb (and still needs to move)
+                        bombTouching = true;
+                        //Removing the amount of bombs yet to be placed before cooldown starts.
+                        bombs -= 1;
+                        //Checking whether all bombs available have been placed.
+                        if (bombs == 0) {
+                            //Resetting the amount of bombs able to be placed in the time span.
+                            bombs = bombset;
+                            //Setting the cooldown period.
+                            cooldown = 180;
+                        }
+                    }    
                 }    
             }
         }    
