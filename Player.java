@@ -9,21 +9,21 @@ import greenfoot.*;
 public class Player extends Actor
 {
     //Setting the amount of lives for the player.
-    int lives = 3;
+    private int lives = 3;
     //Setting the speed of the player.
-    int speed = 2;
+    private int speed = 4;
     //Showing the player isn't touching a bomb which he has placed.
-    boolean bombTouching = false;
+    private boolean bombTouching = false;
     //Showing the player isn't touching any objects.
-    boolean contact = false;
+    private boolean contact = false;
     //Setting the amount of bombs which can be placed at a time.
-    int bombset = 1;
+    private int bombset = 1;
     //Inisialising the frame for animation purposes.
-    int frame = 1;
+    private int frame = 1;
     //Setting the angle of the player.
-    int angle = 0;
+    private int angle = 0;
     //Initialising the cooldown for placing another bomb.
-    int cooldown = 0;
+    private int cooldown = 0;
     //Initialising the range of the bomb.
     public static int range;
     
@@ -67,7 +67,7 @@ public class Player extends Actor
         //Setting the player's starting image.
         setImage(right1);
         //Resetting range value.
-        range = 0;
+        range = 5;
     }    
     
     public void act()
@@ -86,7 +86,7 @@ public class Player extends Actor
         animate();
     }
     
-    public void move() {
+    private void move() {
         //Finding the amount of distance the player is from the centre of each 'grid square'.
         int remainderX = getX()%32-16;
         int remainderY = getY()%32-16;
@@ -152,7 +152,7 @@ public class Player extends Actor
         }
     }    
     
-    public void bombPlace() {
+    private void bombPlace() {
         //Checking whether the player has decided to place a bomb.
         if (Greenfoot.isKeyDown("space")) {
             //Checking whether a bomb has already been placed here.
@@ -165,7 +165,7 @@ public class Player extends Actor
                         int remainderX = getX()%32-16;
                         int remainderY = getY()%32-16;
                         //Placing the bomb in the centre of the grid square.
-                        getWorld().addObject(new Bomb(), getX()-remainderX, getY()-remainderY);
+                        getWorld().addObject(new Bomb(range), getX()-remainderX, getY()-remainderY);
                         //Playing sound for bomb placement.
                         bombSound.play();
                         //Storing that the player is touching a bomb (and still needs to move)
@@ -178,7 +178,7 @@ public class Player extends Actor
         }    
     }
     
-    public void bombCountdown() {
+    private void bombCountdown() {
         //Checking whether the cooldown period is in process.
         if(cooldown != 0) {
             //Lowering the cooldown timer.
@@ -191,7 +191,7 @@ public class Player extends Actor
         }
     }    
     
-    public boolean contact() {
+    private boolean contact() {
         //Checking whether he is touching any objects (and hasn't just placed a bomb).
         if (isTouching(Brick.class) || isTouching(Block.class) || (isTouching(Bomb.class) && bombTouching == false)) {
             contact = true;
@@ -200,7 +200,7 @@ public class Player extends Actor
         return contact;
     }       
    
-    public void animate() {
+    private void animate() {
         //Checking the player is currently alive.
         if (frame > 0) {
             //Checking whether the player is moving up.
@@ -277,7 +277,7 @@ public class Player extends Actor
         }  
     }    
     
-    public void powerUp() {
+    private void powerUp() {
         //Checking whether the player is in contact with a power-up.
         if (isTouching(Powerup.class)) {
             //Playing powerup sound.
@@ -296,7 +296,7 @@ public class Player extends Actor
         }    
     }    
         
-    public void loseLife() {
+    private void loseLife() {
         //Checking whether the player is touching an enemy.
         if (isTouching(Fire.class)) {
             //Checking whether the player is alive.
@@ -355,5 +355,4 @@ public class Player extends Actor
             Greenfoot.stop();
         }
     }
-}    
-    
+}  
