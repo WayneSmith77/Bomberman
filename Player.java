@@ -349,10 +349,14 @@ public class Player extends Actor
         }    
         //Checking whether the player has lost all their lives.
         if (lives == 0 && frame > 0) {
-            //Dispalying Game Over.
-            getWorld().showText("Game Over!", 496, 436);
-            //Ending the game.
-            Greenfoot.stop();
+            gameOver();
         }
     }
+    
+    private void gameOver() {
+        //Dispalying Game Over.
+        getWorld().showText("Game Over!", 496, 436);
+        //Ending the game.
+        Greenfoot.stop();
+    }    
 }  
