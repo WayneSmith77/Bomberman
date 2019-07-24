@@ -337,7 +337,7 @@ public class Player extends Actor
             else if (frame <= -10) {
                 setImage(dead6);
             }    
-            else if (frame < 1) {
+            else if (frame <= 0) {
                 setImage(dead7);
             }    
             //Checking whether the death sequence has ended.
