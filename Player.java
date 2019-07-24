@@ -275,6 +275,39 @@ public class Player extends Actor
                 frame = 1;
             }    
         }  
+        //Checking whether the death sequence is in process.
+        if (frame <= 0) {
+            //Progressing the death sequence.
+            frame += 1;
+            //Displaying images depending on how far through the death animation is.
+            if (frame <= -60) {
+                setImage(dead1);
+            }
+            else if (frame <= -50) {
+                setImage(dead2);
+            }
+            else if (frame <= -40) {
+                setImage(dead3);
+            }    
+            else if (frame <= -30) {
+                setImage(dead4);
+            }
+            else if (frame <= -20) {
+                setImage(dead5);
+            }
+            else if (frame <= -10) {
+                setImage(dead6);
+            }    
+            else if (frame <= 0) {
+                setImage(dead7);
+            }    
+            //Checking whether the death sequence has ended.
+            else {
+                //Resetting the player location and image.
+                setLocation(48, 48);
+                setImage(right1);
+            }    
+        }    
     }    
     
     private void powerUp() {
@@ -314,39 +347,6 @@ public class Player extends Actor
                 angle = 0;
             }    
         }
-        //Checking whether the death sequence is in process.
-        if (frame <= 0) {
-            //Progressing the death sequence.
-            frame += 1;
-            //Displaying images depending on how far through the death animation is.
-            if (frame <= -60) {
-                setImage(dead1);
-            }
-            else if (frame <= -50) {
-                setImage(dead2);
-            }
-            else if (frame <= -40) {
-                setImage(dead3);
-            }    
-            else if (frame <= -30) {
-                setImage(dead4);
-            }
-            else if (frame <= -20) {
-                setImage(dead5);
-            }
-            else if (frame <= -10) {
-                setImage(dead6);
-            }    
-            else if (frame <= 0) {
-                setImage(dead7);
-            }    
-            //Checking whether the death sequence has ended.
-            else {
-                //Resetting the player location and image.
-                setLocation(48, 48);
-                setImage(right1);
-            }    
-        }    
         //Checking whether the player has lost all their lives.
         if (lives == 0 && frame > 0) {
             gameOver();
