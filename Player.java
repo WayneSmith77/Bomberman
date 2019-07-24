@@ -101,7 +101,7 @@ public class Player extends Actor
                 //Moving the new player.
                 move(speed);
                 //Checking whether the player is close to the centre of one of the grid squares.
-                if (Math.abs(remainderX) < 18) {
+                if (Math.abs(remainderX) < 10) {
                     //Setting the player to the centre of the grid square.
                     setLocation(getX()-remainderX, getY());
                 }
@@ -116,7 +116,7 @@ public class Player extends Actor
                 turn(angle-270);
                 angle = 270;
                 move(speed);
-                if (Math.abs(remainderX) < 18) {
+                if (Math.abs(remainderX) < 10) {
                     setLocation(getX()-remainderX, getY());
                 }
                 if (contact() == true) {
@@ -128,7 +128,7 @@ public class Player extends Actor
                 turn(angle);
                 angle = 0;
                 move(speed);
-                if (Math.abs(remainderY) < 18) {
+                if (Math.abs(remainderY) < 10) {
                     setLocation(getX(), getY()-remainderY);
                 }
                 if (contact() == true) {
@@ -140,7 +140,7 @@ public class Player extends Actor
                 turn(angle-180);
                 angle = 180;
                 move(speed);
-                if (Math.abs(remainderY) < 18) {
+                if (Math.abs(remainderY) < 10) {
                     setLocation(getX(), getY()-remainderY);
                 }
                 if (contact() == true) {
