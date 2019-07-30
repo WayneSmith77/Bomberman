@@ -29,7 +29,7 @@ public class Player extends Actor
     //Sound counter used to delay sound execution in movement.
     private int soundCounter = 0;
     //Initialising score count shown in bottom left of screen.
-    public static int score = 0;
+    public static int score;
     //Tracks whether there are enemies left in the world.
     private boolean enemiesLeft = true;
     
@@ -72,6 +72,8 @@ public class Player extends Actor
         setImage(right1);
         //Resetting range value.
         range = 0;
+        //Resetting score value.
+        score = 0;
     }    
     
     public void act()
@@ -426,8 +428,9 @@ public class Player extends Actor
     private void enemyCheck()
     {
         //Checking if there are no enemy objects in the world.
-        if(getWorld().getObjects(Enemy.class).isEmpty()){
+        if(getWorld().getObjects(Enemy.class).isEmpty() && enemiesLeft == true){
             enemiesLeft = false;
+            Greenfoot.playSound("clear.wav");
         }
     }
 }    
