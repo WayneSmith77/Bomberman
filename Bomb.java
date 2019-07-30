@@ -7,7 +7,7 @@ import java.util.List;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Bomb extends Checker
+public class Bomb extends Detector
 {
     private GreenfootImage bomb1 = new GreenfootImage("bomb1.png"); // Initialising bomb images.
     private GreenfootImage bomb2 = new GreenfootImage("bomb2.png"); // ^^^
