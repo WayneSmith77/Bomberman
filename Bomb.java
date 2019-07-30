@@ -7,7 +7,7 @@ import java.util.List;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Bomb extends Actor
+public class Bomb extends Checker
 {
     private GreenfootImage bomb1 = new GreenfootImage("bomb1.png"); // Initialising bomb images.
     private GreenfootImage bomb2 = new GreenfootImage("bomb2.png"); // ^^^
@@ -15,13 +15,13 @@ public class Bomb extends Actor
     private int frame = 0; // Frames determine animation speed and when certain modules execute.
     private int fireRadius = Player.range;
     // Determines fire length from powerup, how many fire body objects are placed (i.e. when fireRadius = 1, total length = 2)
-    private boolean continueL = true; // Used in conjunction with 'stopFire' module to determine whether each side should keep placing fire.
+    private boolean continueL = true; // Used in conjunction with 'checkObstacles' module to determine whether each side should keep placing fire.
     private boolean continueR = true; // ^^^
     private boolean continueU = true; // ^^^
     private boolean continueD = true; // ^^^
-    private int intersectPos; // Used in 'stopFire' module as coordinates to check if there are other objects in the way of fire.
+    private int intersectPos; // Used in 'checkObstacles' module as coordinates to check if there are other objects in the way of fire.
     private int intersectNeg; // Same as above, but for the negative relative coordinates (left and up).
-    private GreenfootImage array[] = Fire.images; // 'images' array from Fire class.
+    private GreenfootImage fImg[] = Fire.images; // 'images' array from Fire class.
     
     /**
      * Act - do whatever the Bomb wants to do. This method is called whenever
@@ -78,41 +78,42 @@ public class Bomb extends Actor
     private void spawnFire()
     {
         if(frame == 135){
+            Greenfoot.playSound("explosion.wav");
             Fire fireCore = new Fire();
             getWorld().addObject(fireCore, getX(), getY());
-            fireCore.setImage(array[0]);
+            fireCore.setImage(fImg[0]);
             for(int count = 1; count <= fireRadius; count++){
                 intersectPos = 32 * count;
                 intersectNeg = -32 * count;
                 if(continueD == true){
                     Fire fireBodyD = new Fire();
                     getWorld().addObject(fireBodyD, getX(), getY() + (32 * count));
-                    fireBodyD.setImage(array[8]);
-                    if(stopFire(0, intersectPos) == true){
+                    fireBodyD.setImage(fImg[8]);
+                    if(checkObstacles(0, intersectPos) == true){
                         continueD = false;
                     }
                 }
                 if(continueU == true){
                     Fire fireBodyU = new Fire();
                     getWorld().addObject(fireBodyU, getX(), getY() - (32 * count));
-                    fireBodyU.setImage(array[8]);
-                    if(stopFire(0, intersectNeg) == true){
+                    fireBodyU.setImage(fImg[8]);
+                    if(checkObstacles(0, intersectNeg) == true){
                         continueU = false;
                     }
                 }
                 if(continueR == true){
                     Fire fireBodyR = new Fire();
                     getWorld().addObject(fireBodyR, getX() + (32 * count), getY());
-                    fireBodyR.setImage(array[4]);
-                    if(stopFire(intersectPos, 0) == true){
+                    fireBodyR.setImage(fImg[4]);
+                    if(checkObstacles(intersectPos, 0) == true){
                         continueR = false;
                     }
                 }
                 if(continueL == true){
                     Fire fireBodyL = new Fire();
                     getWorld().addObject(fireBodyL, getX() - (32 * count), getY());
-                    fireBodyL.setImage(array[4]);
-                    if(stopFire(intersectNeg, 0) == true){
+                    fireBodyL.setImage(fImg[4]);
+                    if(checkObstacles(intersectNeg, 0) == true){
                         continueL = false;
                     }
                 }
@@ -120,38 +121,23 @@ public class Bomb extends Actor
             if(continueD == true){
                 Fire fireEndD = new Fire();
                 getWorld().addObject(fireEndD, getX(), getY() + ((32 * fireRadius) + 32));
-                fireEndD.setImage(array[16]);
+                fireEndD.setImage(fImg[16]);
             }
             if(continueU == true){
                 Fire fireEndU = new Fire();
                 getWorld().addObject(fireEndU, getX(), getY() - ((32 * fireRadius) + 32));
-                fireEndU.setImage(array[12]);
+                fireEndU.setImage(fImg[12]);
             }
             if(continueR == true){
                 Fire fireEndR = new Fire();
                 getWorld().addObject(fireEndR, getX() + ((32 * fireRadius) + 32), getY());
-                fireEndR.setImage(array[20]);
+                fireEndR.setImage(fImg[20]);
             }
             if(continueL == true){
                 Fire fireEndL = new Fire();
                 getWorld().addObject(fireEndL, getX() - ((32 * fireRadius) + 32), getY());
-                fireEndL.setImage(array[24]);
+                fireEndL.setImage(fImg[24]);
             }
         }
-    }
-    
-    /**
-     * Module used in 'spawnFire()' to determine whether there is an object intersecting with fire, and to stop placing fire if there is.
-     * Return value of boolean returns true if there is an object in the way. Parameters specify which direction/coordinates to check.
-     * Each check is located where the last fire object was placed.
-     */
-    private boolean stopFire(int intersectX, int intersectY)
-    {
-        for(Object obj : getObjectsAtOffset(intersectX, intersectY, null)){
-            if(obj instanceof Brick || obj instanceof Block || obj instanceof Bomb){
-                return true;
-            }
-        }
-        return false;
     }
 }
