@@ -11,14 +11,14 @@ public class Player extends Actor
     //Setting the amount of lives for the player.
     private int lives = 3;
     //Setting the speed of the player.
-    private int speed = 4;
+    private int speed = 2;
     //Showing the player isn't touching a bomb which he has placed.
     private boolean bombTouching = false;
     //Showing the player isn't touching any objects.
     private boolean contact = false;
     //Setting the amount of bombs which can be placed at a time.
     private int bombset = 1;
-    //Inisialising the frame for animation purposes.
+    //Initialising the frame for animation purposes.
     private int frame = 1;
     //Setting the angle of the player.
     private int angle = 0;
@@ -26,6 +26,12 @@ public class Player extends Actor
     private int cooldown = 0;
     //Initialising the range of the bomb.
     public static int range;
+    //Sound counter used to delay sound execution in movement.
+    private int soundCounter = 0;
+    //Initialising score count shown in bottom left of screen.
+    public static int score = 0;
+    //Tracks whether there are enemies left in the world.
+    private boolean enemiesLeft = true;
     
     //Setting downwards movement animation tiles.
     private GreenfootImage down1 = new GreenfootImage("tile004.png");
@@ -56,22 +62,25 @@ public class Player extends Actor
     private GreenfootImage dead6 = new GreenfootImage("tile033.png");
     private GreenfootImage dead7 = new GreenfootImage("tile034.png");
     
-    //Initialising sound effects.
-    private GreenfootSound deathSound = new GreenfootSound("death.wav");
-    private GreenfootSound bombSound = new GreenfootSound("bomb.wav");
-    private GreenfootSound horizontalMove = new GreenfootSound("horizontal.wav");
-    private GreenfootSound verticalMove = new GreenfootSound("vertical.wav");
-    private GreenfootSound powerSound = new GreenfootSound("power.wav");
+    //Initialising background music.
+    private GreenfootSound theme = new GreenfootSound("theme.wav");
+    //Ensures music is only played once on loop.
+    private boolean play = true;
     
     public Player() {
         //Setting the player's starting image.
         setImage(right1);
         //Resetting range value.
-        range = 5;
+        range = 0;
     }    
     
     public void act()
     {
+        //Plays background music once on loop, at the start of the game.
+        if(play == true) {
+            theme.playLoop();
+            play = false;
+        }
         //The movement method for the player.
         move();
         //The life loss method for the player.
@@ -84,6 +93,8 @@ public class Player extends Actor
         powerUp();
         //The animation method.
         animate();
+        //Win method for door.
+        win();
     }
     
     private void move() {
@@ -110,6 +121,14 @@ public class Player extends Actor
                     //Moving the player back.
                     move(-speed);
                 }
+                //Movement sounds play after each delay.
+                if (soundCounter == 0) {
+                    Greenfoot.playSound("vertical.wav");
+                }
+                else if (soundCounter == 16) {
+                    soundCounter = -1;
+                }
+                soundCounter++;
             }    
             //Repeating for the downwards movement.
             else if (Greenfoot.isKeyDown("down")) {
@@ -122,6 +141,13 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
+                if (soundCounter == 0) {
+                    Greenfoot.playSound("vertical.wav");
+                }
+                else if (soundCounter == 16) {
+                    soundCounter = -1;
+                }
+                soundCounter++;
             }   
             //Repeating for the rightward movement.
             else if (Greenfoot.isKeyDown("right")) {
@@ -134,6 +160,13 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
+                if (soundCounter == 0) {
+                    Greenfoot.playSound("horizontal.wav");
+                }
+                else if (soundCounter == 16) {
+                    soundCounter = -1;
+                }
+                soundCounter++;
             } 
             //Repeating for the leftward movement.
             else if (Greenfoot.isKeyDown("left")) {
@@ -146,6 +179,13 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
+                if (soundCounter == 0) {
+                    Greenfoot.playSound("horizontal.wav");
+                }
+                else if (soundCounter == 16) {
+                    soundCounter = -1;
+                }
+                soundCounter++;
             } 
             //Resetting the contact variable.
             contact = false;
@@ -165,9 +205,9 @@ public class Player extends Actor
                         int remainderX = getX()%32-16;
                         int remainderY = getY()%32-16;
                         //Placing the bomb in the centre of the grid square.
-                        getWorld().addObject(new Bomb(range), getX()-remainderX, getY()-remainderY);
+                        getWorld().addObject(new Bomb(), getX()-remainderX, getY()-remainderY);
                         //Playing sound for bomb placement.
-                        bombSound.play();
+                        Greenfoot.playSound("bomb.wav");
                         //Storing that the player is touching a bomb (and still needs to move)
                         bombTouching = true;
                         //Setting the cooldown period.
@@ -274,7 +314,7 @@ public class Player extends Actor
                 //Resetting the animation sequence.
                 frame = 1;
             }    
-        }  
+        }
         //Checking whether the death sequence is in process.
         if (frame <= 0) {
             //Progressing the death sequence.
@@ -298,7 +338,7 @@ public class Player extends Actor
             else if (frame <= -10) {
                 setImage(dead6);
             }    
-            else if (frame <= 0) {
+            else if (frame < 1) {
                 setImage(dead7);
             }    
             //Checking whether the death sequence has ended.
@@ -314,7 +354,7 @@ public class Player extends Actor
         //Checking whether the player is in contact with a power-up.
         if (isTouching(Powerup.class)) {
             //Playing powerup sound.
-            powerSound.play();
+            Greenfoot.playSound("power.wav");
             //Storing the contacted power-up as an object.
             Powerup powerup = (Powerup) getOneIntersectingObject(Powerup.class);
             //Getting the attribute of the power-up.
@@ -326,18 +366,21 @@ public class Player extends Actor
                 //Increasing the range of bombs placed.
                 range += 1;
             }
+            //Adding 50 to score display.
+            score += 50;
+            getWorld().showText("Score: " + score, 930, 436);
         }    
     }    
         
     private void loseLife() {
         //Checking whether the player is touching an enemy.
-        if (isTouching(Fire.class)) {
+        if (isTouching(Fire.class) || isTouching(Enemy.class)) {
             //Checking whether the player is alive.
             if (frame > 0) {
                 //Removing a life.
                 lives -=1;
                 //Playing death sound.
-                deathSound.play();
+                Greenfoot.playSound("death.wav");
                 //Updating life counter.
                 getWorld().showText("Lives: " + lives, 60, 436);
                 //Setting in process the death animation sequence.
@@ -353,10 +396,39 @@ public class Player extends Actor
         }
     }
     
-    private void gameOver() {
-        //Dispalying Game Over.
+    private void win()
+    {
+        //Checking for enemies left.
+        enemyCheck();
+        //Checking if the player is currently standing directly on the door.
+        if(getX() == Door.doorX && getY() == Door.doorY && enemiesLeft == false){
+            //Displaying congratulations
+            getWorld().showText("You Win!", 496, 436);
+            //Play win music and stops background music.
+            theme.stop();
+            Greenfoot.playSound("win.mp3");
+            //Ending the game.
+            Greenfoot.stop();
+        }
+    }
+    
+    private void gameOver()
+    {
+        //Displaying Game Over.
         getWorld().showText("Game Over!", 496, 436);
+        //Play game over music and stops background music.
+        theme.stop();
+        Greenfoot.playSound("gameover.mp3");
         //Ending the game.
         Greenfoot.stop();
-    }    
-}  
+    }
+    
+    private void enemyCheck()
+    {
+        //Checking if there are no enemy objects in the world.
+        if(getWorld().getObjects(Enemy.class).isEmpty()){
+            enemiesLeft = false;
+        }
+    }
+}    
+    
