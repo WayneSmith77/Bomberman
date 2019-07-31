@@ -8,8 +8,11 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Powerup extends Actor
 {
-    private boolean effect;
+    private boolean effect; // Boolean represents type of powerup. True = bomb powerup, False = fire range/radius powerup.
 
+    /**
+     * Constructor with parameter to control which type of powerup is created in the world.
+     */
     public Powerup(boolean type) {
         effect = type;
     }
@@ -21,10 +24,13 @@ public class Powerup extends Actor
     public void act() 
     {
         if(isTouching(Player.class)){
-            getWorld().removeObject(this);
+            getWorld().removeObject(this); // Removes powerup from world once collected by Player.
         }
     }    
     
+    /**
+     * Used in Player class to identify which powerup type was collected, then applying effect.
+     */
     public boolean returnAttribute() {
         return effect;
     }        

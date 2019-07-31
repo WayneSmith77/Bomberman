@@ -58,15 +58,18 @@ public class Fire extends Actor
      */
     private void fireEnd()
     {
-        if (getWorld() != null){
+        if (getWorld() != null){ // Checking if fire object is in world.
             for(Object obj : getIntersectingObjects(Bomb.class)){
+                // Checking if bombs are touching any fire, excluding the bomb underneath the fire core.
                 if(obj instanceof Bomb && getImage() != images[0] && getImage() != images[1] && getImage() != images[2] && getImage() != images[3]){
-                    getWorld().removeObject(this);
+                    getWorld().removeObject(this); // Removing fire object from world.
                 }
             }
         }
-        if(isTouching(Brick.class)){
-            getWorld().removeObject(this);
+        if (getWorld() != null){ // Checking if fire object is in world.
+            if(isTouching(Brick.class)){ // Checking if any fire is touching bricks.
+                getWorld().removeObject(this); // Removing fire object from world.
+            }
         }
     }
     
@@ -76,9 +79,9 @@ public class Fire extends Actor
     private void arraySearch()
     {
         if(frame == 0){
-            for(int count = 0; count < 28; count++){
-                if(images[count] == getImage()){
-                    currentImg = count;
+            for(int count = 0; count < 28; count++){ // Looping through 'images' array.
+                if(images[count] == getImage()){ // Checking if current fire object's image matches with array.
+                    currentImg = count; // Storing index of current fire object image.
                 }
             }
         }
@@ -108,7 +111,9 @@ public class Fire extends Actor
             setImage(images[currentImg]);
         }
         else if(frame == 28){
-            getWorld().removeObject(this);
+            if (getWorld() != null){
+                getWorld().removeObject(this); // Removing fire object from the world at the end of animation if it has not been already.
+            }
         }
         frame++;
     }

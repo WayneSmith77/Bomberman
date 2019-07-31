@@ -8,8 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Door extends Actor
 {
-    public static int doorX;
-    public static int doorY;
+    public static int doorX; // Static variable for Player to access door's coordinates.
+    public static int doorY; // Static variable for Player to access door's coordinates.
     
     /**
      * Act - do whatever the Door wants to do. This method is called whenever
@@ -17,7 +17,7 @@ public class Door extends Actor
      */
     public void act() 
     {
-        doorX = getX();
-        doorY = getY();
+        doorX = getX(); // Door's X position.
+        doorY = getY(); // Door's Y position.
     }    
 }

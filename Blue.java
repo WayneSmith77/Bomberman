@@ -12,8 +12,6 @@ public class Blue extends Enemy
     private int intersectNeg = -32;
     private int angle = 0;
     private int speed = 1;
-    private boolean contact;
-    private int frame = 1;
     
     /**
      * Act - do whatever the Enemy wants to do. This method is called whenever
@@ -30,6 +28,10 @@ public class Blue extends Enemy
         int remainderX = getX()%64-48;
         int remainderY = getY()%64-48;
         
+        if (contact() == true) {
+            turn(180);
+            angle = 180;
+         }
         if(checkObstacles(0, intersectNeg) == false){ // checking one spot left
             if (remainderX == 0 && remainderY == 0) {
                 if (Greenfoot.getRandomNumber(100) < 30){
@@ -63,13 +65,13 @@ public class Blue extends Enemy
                 }               
             }
         }
-        
-        if (contact() == true) {
-            turn(180);
-            angle = 180;
-            move(speed);
-            contact = false;
-         }
+        if(checkObstacles(0, intersectNeg) == true){
+            if (remainderX == 0 && remainderY == 0){
+                turn(angle-90);
+                angle = 90;
+            }
+            
+        }
         move(speed);
     }
 }

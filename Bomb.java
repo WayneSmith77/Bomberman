@@ -78,64 +78,64 @@ public class Bomb extends Detector
     private void spawnFire()
     {
         if(frame == 135){
-            Greenfoot.playSound("explosion.wav");
+            Greenfoot.playSound("explosion.wav"); // Playing bomb explosion sound effect.
             Fire fireCore = new Fire();
-            getWorld().addObject(fireCore, getX(), getY());
+            getWorld().addObject(fireCore, getX(), getY()); // Adding fire core on top of bomb.
             fireCore.setImage(fImg[0]);
-            for(int count = 1; count <= fireRadius; count++){
+            for(int count = 1; count <= fireRadius; count++){ // Looping through placement of fire body objects for length of fire radius.
                 intersectPos = 32 * count;
                 intersectNeg = -32 * count;
-                if(continueD == true){
+                if(continueD == true){ // Down
                     Fire fireBodyD = new Fire();
-                    getWorld().addObject(fireBodyD, getX(), getY() + (32 * count));
+                    getWorld().addObject(fireBodyD, getX(), getY() + (32 * count)); // Placing fire body.
                     fireBodyD.setImage(fImg[8]);
-                    if(checkObstacles(0, intersectPos) == true){
-                        continueD = false;
+                    if(checkObstacles(0, intersectPos) == true){ // Checking whether fire intersects any obstacles.
+                        continueD = false; // Stops placing fire in down direction.
                     }
                 }
-                if(continueU == true){
+                if(continueU == true){ // Up
                     Fire fireBodyU = new Fire();
-                    getWorld().addObject(fireBodyU, getX(), getY() - (32 * count));
+                    getWorld().addObject(fireBodyU, getX(), getY() - (32 * count)); // Placing fire body.
                     fireBodyU.setImage(fImg[8]);
-                    if(checkObstacles(0, intersectNeg) == true){
-                        continueU = false;
+                    if(checkObstacles(0, intersectNeg) == true){ // Checking whether fire intersects any obstacles.
+                        continueU = false; // Stops placing fire in up direction.
                     }
                 }
-                if(continueR == true){
+                if(continueR == true){ // Right
                     Fire fireBodyR = new Fire();
-                    getWorld().addObject(fireBodyR, getX() + (32 * count), getY());
+                    getWorld().addObject(fireBodyR, getX() + (32 * count), getY()); // Placing fire body.
                     fireBodyR.setImage(fImg[4]);
-                    if(checkObstacles(intersectPos, 0) == true){
-                        continueR = false;
+                    if(checkObstacles(intersectPos, 0) == true){ // Checking whether fire intersects any obstacles.
+                        continueR = false; // Stops placing fire in right direction.
                     }
                 }
-                if(continueL == true){
+                if(continueL == true){ // Left
                     Fire fireBodyL = new Fire();
-                    getWorld().addObject(fireBodyL, getX() - (32 * count), getY());
+                    getWorld().addObject(fireBodyL, getX() - (32 * count), getY()); // Placing fire body.
                     fireBodyL.setImage(fImg[4]);
-                    if(checkObstacles(intersectNeg, 0) == true){
-                        continueL = false;
+                    if(checkObstacles(intersectNeg, 0) == true){ // Checking whether fire intersects any obstacles.
+                        continueL = false; // Stops placing fire in left direction.
                     }
                 }
             }
             if(continueD == true){
                 Fire fireEndD = new Fire();
-                getWorld().addObject(fireEndD, getX(), getY() + ((32 * fireRadius) + 32));
+                getWorld().addObject(fireEndD, getX(), getY() + ((32 * fireRadius) + 32)); // Placing fire end.
                 fireEndD.setImage(fImg[16]);
             }
             if(continueU == true){
                 Fire fireEndU = new Fire();
-                getWorld().addObject(fireEndU, getX(), getY() - ((32 * fireRadius) + 32));
+                getWorld().addObject(fireEndU, getX(), getY() - ((32 * fireRadius) + 32)); // Placing fire end.
                 fireEndU.setImage(fImg[12]);
             }
             if(continueR == true){
                 Fire fireEndR = new Fire();
-                getWorld().addObject(fireEndR, getX() + ((32 * fireRadius) + 32), getY());
+                getWorld().addObject(fireEndR, getX() + ((32 * fireRadius) + 32), getY()); // Placing fire end.
                 fireEndR.setImage(fImg[20]);
             }
             if(continueL == true){
                 Fire fireEndL = new Fire();
-                getWorld().addObject(fireEndL, getX() - ((32 * fireRadius) + 32), getY());
+                getWorld().addObject(fireEndL, getX() - ((32 * fireRadius) + 32), getY()); // Placing fire end.
                 fireEndL.setImage(fImg[24]);
             }
         }

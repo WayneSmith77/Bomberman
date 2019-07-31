@@ -30,13 +30,13 @@ public class Brick extends Actor
     /**
      * Animation of brick breaking after being hit by fire.
      */
-    public void disintegrate()
+    private void disintegrate()
     {
         if(isTouching(Fire.class)){
             if(frame == 0){
                 setImage(brick2);
             }
-            touched = true;
+            touched = true; // Verifies that brick has been hit by fire, rest of disintegration animation continues.
             frame++;
         }
         else if(touched == true){
@@ -56,7 +56,7 @@ public class Brick extends Actor
                 setImage(brick7);
             }
             else if(frame == 18){
-                getWorld().removeObject(this);
+                getWorld().removeObject(this); // Removing brick after short animation. 
             }
             frame++;
         }

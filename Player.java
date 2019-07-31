@@ -101,8 +101,8 @@ public class Player extends Actor
     
     private void move() {
         //Finding the amount of distance the player is from the centre of each 'grid square'.
-        int remainderX = getX()%32-16;
-        int remainderY = getY()%32-16;
+        int remainderX = getX()%64-18;
+        int remainderY = getY()%64-18;
         //Checking whether the player is currently alive.
         if (frame > 0) {
             //Checking which key was pressed.
@@ -124,13 +124,7 @@ public class Player extends Actor
                     move(-speed);
                 }
                 //Movement sounds play after each delay.
-                if (soundCounter == 0) {
-                    Greenfoot.playSound("vertical.wav");
-                }
-                else if (soundCounter == 16) {
-                    soundCounter = -1;
-                }
-                soundCounter++;
+                soundCounter("vertical.wav");
             }    
             //Repeating for the downwards movement.
             else if (Greenfoot.isKeyDown("down")) {
@@ -143,13 +137,7 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
-                if (soundCounter == 0) {
-                    Greenfoot.playSound("vertical.wav");
-                }
-                else if (soundCounter == 16) {
-                    soundCounter = -1;
-                }
-                soundCounter++;
+                soundCounter("vertical.wav");
             }   
             //Repeating for the rightward movement.
             else if (Greenfoot.isKeyDown("right")) {
@@ -162,13 +150,7 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
-                if (soundCounter == 0) {
-                    Greenfoot.playSound("horizontal.wav");
-                }
-                else if (soundCounter == 16) {
-                    soundCounter = -1;
-                }
-                soundCounter++;
+                soundCounter("horizontal.wav");
             } 
             //Repeating for the leftward movement.
             else if (Greenfoot.isKeyDown("left")) {
@@ -181,18 +163,23 @@ public class Player extends Actor
                 if (contact() == true) {
                     move(-speed);
                 }
-                if (soundCounter == 0) {
-                    Greenfoot.playSound("horizontal.wav");
-                }
-                else if (soundCounter == 16) {
-                    soundCounter = -1;
-                }
-                soundCounter++;
+                soundCounter("horizontal.wav");
             } 
             //Resetting the contact variable.
             contact = false;
         }
     }    
+    
+    private void soundCounter(String sound)
+    {
+        if (soundCounter == 0) {
+            Greenfoot.playSound(sound);
+        }
+        else if (soundCounter == 16) {
+            soundCounter = -1;
+        }
+        soundCounter++;
+    }
     
     private void bombPlace() {
         //Checking whether the player has decided to place a bomb.

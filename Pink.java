@@ -12,8 +12,6 @@ public class Pink extends Enemy
     private int intersectNeg = -32;
     private int angle = 0;
     private int speed = 1;
-    private boolean contact;
-    private int frame = 1;
     
     /**
      * Act - do whatever the Enemy wants to do. This method is called whenever
@@ -31,7 +29,6 @@ public class Pink extends Enemy
             turn(180);
             angle = 180;
             move(speed);
-            contact = false;
          }
         move(speed);
     }
